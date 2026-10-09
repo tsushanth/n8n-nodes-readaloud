@@ -4,7 +4,8 @@ All notable changes to this project are documented here. Releases are generated 
 
 ## 0.1.1
 
-- First release published from GitHub Actions with npm provenance (trusted publishing). No code changes.
+- First release published from GitHub Actions with npm provenance (trusted publishing).
+- Removed the Voice > Get Many operation: only `piper-default` is offered for now, so there is no list to show.
 
 ## 0.1.0
 

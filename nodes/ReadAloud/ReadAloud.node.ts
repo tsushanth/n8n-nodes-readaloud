@@ -100,7 +100,6 @@ export class ReadAloud implements INodeType {
 				noDataExpression: true,
 				options: [
 					{ name: 'Speech', value: 'speech' },
-					{ name: 'Voice', value: 'voice' },
 				],
 				default: 'speech',
 			},
@@ -121,22 +120,6 @@ export class ReadAloud implements INodeType {
 				default: 'textToSpeech',
 			},
 			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				noDataExpression: true,
-				displayOptions: { show: { resource: ['voice'] } },
-				options: [
-					{
-						name: 'Get Many',
-						value: 'getAll',
-						description: 'List the voices available to your account',
-						action: 'Get many voices',
-					},
-				],
-				default: 'getAll',
-			},
-			{
 				displayName: 'Text',
 				name: 'text',
 				type: 'string',
@@ -153,7 +136,7 @@ export class ReadAloud implements INodeType {
 				type: 'string',
 				default: 'piper-default',
 				description:
-					'Voice ID to speak with. Leave the default for the standard voice, or use the Voice resource (Get Many) to list the IDs available to your account.',
+					'Voice ID to speak with. Currently only piper-default is offered, which is the default.',
 				displayOptions: { show: { resource: ['speech'], operation: ['textToSpeech'] } },
 			},
 			{
@@ -287,9 +270,6 @@ export class ReadAloud implements INodeType {
 						response_format: format,
 						speed,
 					});
-				} else if (resource === 'voice' && operation === 'getAll') {
-					requestOptions.url = `${baseUrl}/v1/voices`;
-					requestOptions.json = true;
 				} else {
 					throw new NodeOperationError(
 						this.getNode(),
@@ -313,15 +293,6 @@ export class ReadAloud implements INodeType {
 						httpCode: String(response.statusCode),
 						itemIndex: i,
 					});
-				}
-
-				if (resource === 'voice') {
-					const body = response.body as IDataObject;
-					const voices = (Array.isArray(body.voices) ? body.voices : []) as IDataObject[];
-					for (const v of voices) {
-						returnData.push({ json: v, pairedItem: { item: i } });
-					}
-					continue;
 				}
 
 				const raw = response.body;

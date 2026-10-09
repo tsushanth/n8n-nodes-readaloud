@@ -177,18 +177,6 @@ test('network failure is wrapped in NodeApiError', async () => {
 	await assert.rejects(run(ctx), (e) => e instanceof NodeApiError);
 });
 
-test('list voices emits one item per voice', async () => {
-	const voices = [{ voice_id: 'voice-a' }, { voice_id: 'voice-b' }];
-	const { ctx, calls } = makeCtx({
-		params: { resource: 'voice', operation: 'getAll' },
-		response: { statusCode: 200, headers: {}, body: { voices } },
-	});
-	const [out] = await run(ctx);
-	assert.equal(calls[0].opts.method, 'GET');
-	assert.equal(calls[0].opts.url, 'https://api.readaloudai.org/v1/voices');
-	assert.deepEqual(out.map((o) => o.json.voice_id), ['voice-a', 'voice-b']);
-});
-
 test('credential: bearer auth, secret field, default base URL, test request', () => {
 	const c = new ReadAloudApi();
 	const key = c.properties.find((p) => p.name === 'apiKey');
@@ -208,4 +196,9 @@ test('voice field defaults to piper-default and is free text', () => {
 	const prop = new ReadAloud().description.properties.find((p) => p.name === 'voice');
 	assert.equal(prop.default, 'piper-default');
 	assert.equal(prop.type, 'string');
+});
+
+test('only the Speech resource exists (no voice listing is offered)', () => {
+	const resource = new ReadAloud().description.properties.find((p) => p.name === 'resource');
+	assert.deepEqual(resource.options.map((o) => o.value), ['speech']);
 });
