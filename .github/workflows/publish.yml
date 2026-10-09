@@ -1,0 +1,72 @@
+# Publishes this n8n community node package to npm when a version tag is pushed.
+#
+# n8n requires community nodes to be published from GitHub Actions with an npm
+# provenance statement. `npm run release` (n8n-node release) detects
+# GITHUB_ACTIONS, runs lint and build, then runs `npm publish` with
+# NPM_CONFIG_PROVENANCE=true. This file MUST stay named publish.yml: npm trusted
+# publishing is bound to the workflow file name.
+#
+# One-time setup (npm trusted publishing, OIDC, no long-lived token):
+#   npmjs.com -> package settings -> Trusted Publisher -> GitHub Actions
+#     Organization or user: tsushanth
+#     Repository:           n8n-nodes-readaloud
+#     Workflow filename:    publish.yml
+#     Environment:          (blank)
+# The package must exist on npm before a trusted publisher can be attached, so
+# the very first version has to be published once by the maintainer.
+#
+# Release: `npm run release` locally (bumps version, updates the changelog,
+# commits, tags and pushes). Pushing the tag triggers this workflow.
+
+name: Publish
+
+on:
+  push:
+    tags:
+      - '*.*.*'
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+
+    permissions:
+      # Required for the OIDC token used by trusted publishing and provenance.
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
+
+      - name: Check npm supports trusted publishing (>= 11.5.1)
+        run: |
+          v=$(npm --version)
+          echo "npm $v"
+          [ "$(printf '%s\n' 11.5.1 "$v" | sort -V | head -n1)" = "11.5.1" ]
+
+      - name: Check tag matches package.json version
+        run: |
+          pkg=$(node -p "require('./package.json').version")
+          if [ "$GITHUB_REF_NAME" != "$pkg" ] && [ "$GITHUB_REF_NAME" != "v$pkg" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json version $pkg" >&2
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Release (lint, build, npm publish with provenance)
+        run: npm run release
