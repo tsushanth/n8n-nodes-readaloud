@@ -1,6 +1,6 @@
 {
 	"name": "n8n-nodes-readaloud",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "n8n community node for ReadAloud: convert text to speech (MP3, WAV, Opus, PCM) through the ReadAloud streaming TTS API.",
 	"license": "MIT",
 	"homepage": "https://github.com/tsushanth/n8n-nodes-readaloud#readme",
