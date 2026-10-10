@@ -1,6 +1,6 @@
 {
 	"name": "n8n-nodes-readaloud",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "n8n community node for ReadAloud: convert text to speech (MP3, WAV, Opus, PCM) through the ReadAloud streaming TTS API.",
 	"license": "MIT",
 	"homepage": "https://github.com/tsushanth/n8n-nodes-readaloud#readme",
@@ -14,7 +14,7 @@
 	],
 	"author": {
 		"name": "Sushanth Tiruvaipati",
-		"email": "78000697+tsushanth@users.noreply.github.com",
+		"email": "support@readaloudai.org",
 		"url": "https://github.com/tsushanth"
 	},
 	"repository": {
