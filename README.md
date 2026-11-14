@@ -25,7 +25,7 @@ Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes
 
 - **Text to Speech**: convert text (up to 5000 characters per item) into an audio file.
   - **Text**: the text to speak.
-  - **Voice**: voice ID, free text. Defaults to `piper-default`, which is currently the only voice offered.
+  - **Voice**: voice ID, free text. Defaults to `readaloud-default`, which is currently the only voice offered.
   - **Output Format**: MP3, WAV, Opus (Ogg) or PCM (raw 16-bit).
   - **Speed**: 0.25 to 4, default 1.
   - **Options**: base file name, binary property name (default `data`), model name (default `tts-1`).
