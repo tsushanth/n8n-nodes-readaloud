@@ -11,7 +11,7 @@ import { NodeApiError, NodeConnectionTypes, NodeOperationError } from 'n8n-workf
 
 const DEFAULT_BASE_URL = 'https://api.readaloudai.org';
 const MAX_CHARACTERS = 5000;
-const DEFAULT_VOICE = 'piper-default';
+const DEFAULT_VOICE = 'readaloud-default';
 
 const FORMATS: Record<string, { mimeType: string; extension: string }> = {
 	mp3: { mimeType: 'audio/mpeg', extension: 'mp3' },
@@ -134,9 +134,9 @@ export class ReadAloud implements INodeType {
 				displayName: 'Voice',
 				name: 'voice',
 				type: 'string',
-				default: 'piper-default',
+				default: 'readaloud-default',
 				description:
-					'Voice ID to speak with. Currently only piper-default is offered, which is the default.',
+					'Voice ID to speak with. Currently only readaloud-default is offered, which is the default.',
 				displayOptions: { show: { resource: ['speech'], operation: ['textToSpeech'] } },
 			},
 			{

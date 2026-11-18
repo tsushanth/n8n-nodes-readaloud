@@ -13,7 +13,7 @@ function makeCtx({ items = [{ json: {} }], params = {}, response, continueOnFail
 		resource: 'speech',
 		operation: 'textToSpeech',
 		text: 'Hello',
-		voice: 'piper-default',
+		voice: 'readaloud-default',
 		format: 'mp3',
 		speed: 1,
 		options: {},
@@ -48,7 +48,7 @@ const err = (statusCode, message) => ({
 });
 
 test('text to speech sends the OpenAI-compatible request and returns binary audio', async () => {
-	const { ctx, calls } = makeCtx({ response: ok, params: { text: 'Hi there', voice: 'piper-default', speed: 1.5 } });
+	const { ctx, calls } = makeCtx({ response: ok, params: { text: 'Hi there', voice: 'readaloud-default', speed: 1.5 } });
 	const [out] = await run(ctx);
 	assert.equal(calls.length, 1);
 	assert.equal(calls[0].cred, 'readAloudApi');
@@ -58,7 +58,7 @@ test('text to speech sends the OpenAI-compatible request and returns binary audi
 	assert.deepEqual(JSON.parse(calls[0].opts.body), {
 		model: 'tts-1',
 		input: 'Hi there',
-		voice: 'piper-default',
+		voice: 'readaloud-default',
 		response_format: 'mp3',
 		speed: 1.5,
 	});
@@ -186,15 +186,15 @@ test('credential: bearer auth, secret field, default base URL, test request', ()
 	assert.equal(c.test.request.url, '/v1/voices');
 });
 
-test('empty voice falls back to piper-default', async () => {
+test('empty voice falls back to readaloud-default', async () => {
 	const { ctx, calls } = makeCtx({ response: ok, params: { voice: '   ' } });
 	await run(ctx);
-	assert.equal(JSON.parse(calls[0].opts.body).voice, 'piper-default');
+	assert.equal(JSON.parse(calls[0].opts.body).voice, 'readaloud-default');
 });
 
-test('voice field defaults to piper-default and is free text', () => {
+test('voice field defaults to readaloud-default and is free text', () => {
 	const prop = new ReadAloud().description.properties.find((p) => p.name === 'voice');
-	assert.equal(prop.default, 'piper-default');
+	assert.equal(prop.default, 'readaloud-default');
 	assert.equal(prop.type, 'string');
 });
 
